@@ -18,6 +18,10 @@ io.on('connection', (socket) => {
 	socket.on('new-message',(message) =>{
 		io.emit('new-message',message);
 	});
+	socket.on('disconnect', () => {
+		totalUsers--;
+		io.emit('totalUsers',totalUsers);
+	});
 });
 
 server.listen(port, () => {
