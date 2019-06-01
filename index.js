@@ -20,6 +20,10 @@ io.on('connection', (socket) => {
 		io.emit('new-message',message);
 	});
 
+	socket.on('typing', (typinguser) => {
+		io.emit('typing', typinguser + ' ' + 'is typing' );
+	});
+
 	socket.on('disconnect', () => {
 		totalUsers--;
 		io.emit('totalUsers',totalUsers);
