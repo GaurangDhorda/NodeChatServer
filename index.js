@@ -21,7 +21,7 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('typing', (typinguser) => {
-		if (typinguser === false){} 
+		if (typinguser === false){ io.emit('typing',' ')} 
 		else{
 		io.emit('typing', typinguser + ' ' + 'is typing' );}
 	});
