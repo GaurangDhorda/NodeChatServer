@@ -14,10 +14,12 @@ let totalUsers = 0;
 io.on('connection', (socket) => {
 	totalUsers++;
     	console.log('user connected');
+	
 	io.emit('totalUsers',totalUsers);
 	socket.on('new-message',(message) =>{
 		io.emit('new-message',message);
 	});
+
 	socket.on('disconnect', () => {
 		totalUsers--;
 		io.emit('totalUsers',totalUsers);
