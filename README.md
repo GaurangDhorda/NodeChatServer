@@ -23,3 +23,15 @@
 ## Deployment this nodejs express socket.io server files to Heroku..
   
 [Heroku Setup Insruction from Github](https://www.freecodecamp.org/news/how-to-deploy-a-nodejs-app-to-heroku-from-github-without-installing-heroku-on-your-machine-433bec770efe/)
+## Inistializing git in folder...
+
+1. Initialize the Git repository at the root level
+    - git init
+2. Add all the files to your local Git (staging)
+    - git add -a 
+3. Commit your changes to your local Git
+     - git commit -m "commit message"
+4. Link to your GitHub repository
+     - git remote add origin < url of github repository >
+5. push your change
+     - git push --set-upstream origin master
