@@ -1,4 +1,6 @@
-let express = require('express')
+let express = require('express');
+let bodyParser = require('body-parser');
+let cors = require('cors');
 let router = express.Router();
 let app = express();
 
@@ -11,8 +13,15 @@ let io = socketIO(server);
 const port = process.env.PORT || 3000;
 let totalUsers = 0;
 
+app.use(bodyParser.json());
+app.use (cors());
 
 app.get('/', (req, res) => res.send('Hello World!'));
+
+app.post('/enroll',(req, res) => {
+	res.send(req.body);
+	res.status (200).send({'msg': 'Data received'});
+})
 
 io.on('connection', (socket) => {
 	totalUsers++;
