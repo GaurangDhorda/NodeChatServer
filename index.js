@@ -11,6 +11,9 @@ let io = socketIO(server);
 const port = process.env.PORT || 3000;
 let totalUsers = 0;
 
+
+app.get('/', (req, res) => res.send('Hello World!'));
+
 io.on('connection', (socket) => {
 	totalUsers++;
     	console.log('user connected');
