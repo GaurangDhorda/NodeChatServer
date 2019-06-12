@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
     	console.log('user connected');
 	
 	io.emit('totalUsers',totalUsers);
-	socket.on('new-message', ( message, userName ) =>{
+	socket.on('new-message', ( { message, userName } ) =>{
 		io.emit('new-message', { msg: message, uname: userName } );
 	});
 
