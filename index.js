@@ -28,8 +28,8 @@ io.on('connection', (socket) => {
     	console.log('user connected');
 	
 	io.emit('totalUsers',totalUsers);
-	socket.on('new-message',(message) =>{
-		io.emit('new-message',message);
+	socket.on('new-message',(message, userName) =>{
+		io.emit('new-message', message, userName );
 	});
 
 	socket.on('typing', (typinguser) => {
