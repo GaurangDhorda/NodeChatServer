@@ -26,7 +26,10 @@ app.post('/enroll',(req, res) => {
 io.on('connection', (socket) => {
 	totalUsers++;
     	console.log('user connected');
-	
+	socket.on('getTotalUsers',()=>{
+		io.emit('getTotalUsers',totalUsers);
+	});
+
 	io.emit('totalUsers',totalUsers);
 	socket.on('new-message', ( data , username ) =>{
 		io.emit('new-message',  data , username );
