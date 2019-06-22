@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use (cors());
 
 app.get('/', (req, res) => {
-		res.send('hello World');
+		res.send('Hello World, Response from express server');
 	
 	});
 
