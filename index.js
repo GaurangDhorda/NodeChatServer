@@ -16,7 +16,28 @@ let totalUsers = 0;
 app.use(bodyParser.json());
 app.use (cors());
 
-app.get('/', (req, res) => res.setHeader('Location','https://gaurangdhorda.github.io/Angular-Demo/'));
+app.get('/', (req, res) => {
+	 var requestOptions = {
+	        hostname: 'https://gaurangdhorda.github.io/Angular-Demo/', //url or ip address
+        	port: 8080, //default to 80 if not provided
+	        path: '/take-request',
+        	method: 'POST' //HTTP Method
+	};
+	var exernalRequest = http.request(requestOptions, (externalResponse) => {
+
+        //ServerB done responding
+        externalResponse.on('end', () => {
+
+            //Response to client
+            res.end('data was send to serverB');
+        });
+    	);
+
+    // Free to send anthing to serverB
+	    externalRequest.write(req.data);
+    	externalRequest.end();
+	
+	});
 
 app.post('/enroll',(req, res) => {
 	res.send(req.body);
