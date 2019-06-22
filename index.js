@@ -16,7 +16,7 @@ let totalUsers = 0;
 app.use(bodyParser.json());
 app.use (cors());
 
-app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/', (req, res) => res.send(https://gaurangdhorda.github.io/Angular-Demo/));
 
 app.post('/enroll',(req, res) => {
 	res.send(req.body);
