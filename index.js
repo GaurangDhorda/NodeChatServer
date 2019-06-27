@@ -16,9 +16,10 @@ let totalUsers = 0;
 app.use(bodyParser.json());
 app.use (cors());
 
+var path = require('path');
 app.get('/', (req, res) => {
 	//	res.send('Hello World, Response from express server');
-		res.sendFile('hello.html');
+		res.sendFile( path.resolve('hello.html'));
 	//	res.status(301).redirect('https://gaurangdhorda.github.io/Angular-Demo/');
 	
 	});
