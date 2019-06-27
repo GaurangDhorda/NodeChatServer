@@ -18,7 +18,7 @@ app.use (cors());
 
 app.get('/', (req, res) => {
 	//	res.send('Hello World, Response from express server');
-		res.sendFile('/hello.html');
+		res.sendFile('hello.html');
 	//	res.status(301).redirect('https://gaurangdhorda.github.io/Angular-Demo/');
 	
 	});
