@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 app.use (cors());
 
 var path = require('path');
+// when url fire by client-side this app.get('/') default requenst fire and hello.html response fire..
 app.get('/', (req, res) => {
 	//	res.send('Hello World, Response from express server');
 		res.sendFile( path.resolve('hello.html'));
