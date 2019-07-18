@@ -34,17 +34,54 @@ firebase.initializeApp(config);
 // when url fire by client-side this app.get('/') default requenst fire and hello.html response fire..
 app.get('/', (req, res) => {
 	//	res.send('Hello World, Response from express server');
+	console.log('first time call');
 		res.sendFile( path.resolve('hello.html'));
 	//	res.status(301).redirect('https://gaurangdhorda.github.io/Angular-Demo/');
-	
-	});
-  
-app.post('/enroll',(req, res) => {
-	// enroll is called from angular app and data are loaded here.. then we save this data to the firebase database...
-	res.send(req.body);
-	firebase.database().ref('/Material-Contact').set(req.body);
-	res.status (200).send({'msg': 'Data received'});
+});
 
+	function snapshotToArray(snapshot) {
+		var returnArr = [];
+	
+		snapshot.forEach(function(childSnapshot) {
+			var item = childSnapshot.val();
+			item.key = childSnapshot.key;
+	
+			returnArr.push(item);
+		});
+	
+		return returnArr;
+	}
+			
+app.get('/materialContactRead', (req, res) => {
+	// getting all data from firebase database..
+	var userReference = firebase.database().ref("/Material-Contact/");
+	//Attach an asynchronous callback to read the data
+	userReference.on("value", snapshot => {
+		const responseData = snapshotToArray(snapshot);
+	//	res.send(responseData);
+	res.json(responseData);
+		console.log(responseData);
+		 userReference.off("value");
+	});
+});
+app.get('/edit', (req, res) =>{
+	res.status (200).send({'msg': 'Data received'});
+});
+
+app.get('/enroll',(req, res) => {
+	// enroll is called from angular app and data are loaded here.. then we save this data to the firebase database...
+	//console.log('req.body '+ req.body);
+	
+	//res.send(req.body);
+	 const resVal = req.body;
+	 var key = firebase.database().ref().push().key;
+	 console.log(key);
+	
+	// firebase.database().ref('/Material-Contact/' + resVal.key).set(resVal);
+	  firebase.database().ref('/Material-Contact/').push(resVal);
+	res.json(req.body);
+	//res.status (200).send({'msg': 'Data received'});
+	console.log(resVal);
 	
 })
 
