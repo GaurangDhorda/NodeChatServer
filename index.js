@@ -64,7 +64,7 @@ app.get('/materialContactRead', (req, res) => {
 		 userReference.off("value");
 	});
 });
-app.get('/edit', (req, res) =>{
+app.post('/edit', (req, res) =>{
 	res.status (200).send({'msg': 'Data received'});
 });
 
