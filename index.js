@@ -64,11 +64,16 @@ app.get('/materialContactRead', (req, res) => {
 		 userReference.off("value");
 	});
 });
-app.post('/edit', (req, res) =>{
-	res.status (200).send({'msg': 'Data received'});
+
+app.post('/editt', (req, res) => {
+	console.log(req.body.key);
+	var userReference = firebase.database().ref().child('/Material-Contact/' + req.body.key);
+	console.log(userReference);
+	userReference.update(req.body);
+	res.status (200).send(req.body);
 });
 
-app.get('/enroll',(req, res) => {
+app.post('/enroll',(req, res) => {
 	// enroll is called from angular app and data are loaded here.. then we save this data to the firebase database...
 	//console.log('req.body '+ req.body);
 	
