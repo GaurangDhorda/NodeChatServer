@@ -65,6 +65,13 @@ app.get('/materialContactRead', (req, res) => {
 	});
 });
 
+app.post('/deleteEmployee', (req, res) => {
+	console.log(req.body.key);
+	var userReference = firebase.database().ref().child('/Material-Contact/' + req.body.key);
+	userReference.remove();
+	res.status(200).send(req.body);
+});
+
 app.post('/editt', (req, res) => {
 	console.log(req.body.key);
 	var userReference = firebase.database().ref().child('/Material-Contact/' + req.body.key);
