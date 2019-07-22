@@ -10,6 +10,17 @@ let server = http.Server(app);
 let socketIO = require('socket.io');
 let io = socketIO(server);
 
+let multer = require('multer');
+const storage = multer.diskStorage({
+	destination: (req, file, cb) =>{
+		cb(null, 'upload');
+	},
+	filename: (req,file, cb) =>{
+		cb(null, Date.now() + file.originalname);
+	}
+});
+
+const upload = multer( {storage: storage});
 const port = process.env.PORT || 3000;
 let totalUsers = 0;
 
@@ -29,6 +40,8 @@ var config = {
 	messagingSenderId: '345026705484',
 	appId: '1:345026705484:web:962e5b869e82de52'
 };
+let firebaseAdmin = require('firebase-admin');
+
 firebase.initializeApp(config);
 
 // when url fire by client-side this app.get('/') default requenst fire and hello.html response fire..
@@ -54,6 +67,7 @@ app.get('/', (req, res) => {
 			
 app.get('/materialContactRead', (req, res) => {
 	// getting all data from firebase database..
+	
 	var userReference = firebase.database().ref("/Material-Contact/");
 	//Attach an asynchronous callback to read the data
 	userReference.on("value", snapshot => {
@@ -69,6 +83,7 @@ app.post('/deleteEmployee', (req, res) => {
 	console.log(req.body.key);
 	var userReference = firebase.database().ref().child('/Material-Contact/' + req.body.key);
 	userReference.remove();
+
 	res.status(200).send(req.body);
 });
 
@@ -96,6 +111,13 @@ app.post('/enroll',(req, res) => {
 	console.log(resVal);
 	
 })
+
+app.post('/fileUpload', upload.single('image')  ,(req , res) =>{
+
+	 console.log(req.file);
+	// firebase.storage().ref('gs://testingapp-8fb86.appspot.com/').child('/employeeImage/').put(req.file);
+	res.status(200).send({'msg':'File Uploaded'}); 
+});
 
 io.on('connection', (socket) => {
 	totalUsers++;
