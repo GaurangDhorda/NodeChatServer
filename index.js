@@ -10,6 +10,8 @@ let server = http.Server(app);
 let socketIO = require('socket.io');
 let io = socketIO(server);
 
+let webpush = require('web-push');
+
 let multer = require('multer');
 const storage = multer.diskStorage({
 	destination: (req, file, cb) =>{
@@ -41,7 +43,11 @@ var config = {
 	appId: '1:345026705484:web:962e5b869e82de52'
 };
 let firebaseAdmin = require('firebase-admin');
-
+var serviceAccount = require( './serviceAccountKey.json');
+firebaseAdmin.initializeApp({
+credential: firebaseAdmin.credential.cert(serviceAccount),
+databaseURL: 'https://testingapp-8fb86.firebaseio.com'
+});
 firebase.initializeApp(config);
 
 // when url fire by client-side this app.get('/') default requenst fire and hello.html response fire..
@@ -114,9 +120,38 @@ app.post('/enroll',(req, res) => {
 
 app.post('/fileUpload', upload.single('image')  ,(req , res) =>{
 
-	 console.log(req.file);
-	// firebase.storage().ref('gs://testingapp-8fb86.appspot.com/').child('/employeeImage/').put(req.file);
+	// console.log(req.file);
+	// firebase.storage().ref().child('/employeeImage/').put(req.file);
+// const storage = firebaseAdmin.storage();
+ // const storageRef = s  ; // storage.ref('employeeImage/' + req.file.filename);
+ // const storageRef = firebaseAd
+ // storageRef.file(rew.file);
+ // firebaseAdmin.storage().bucket()
 	res.status(200).send({'msg':'File Uploaded'}); 
+});
+
+app.post('/subscribe', (req, res) => {
+	let sub = req.body;
+	res.set('content-type', 'application-json');
+	webpush.setVapidDetails(
+		'grdtechlab@gmail.com',
+		'BGeXc0b2Tfiro0K5KnSdjKMOzLhTBWW9kZ14iA2i6UTUOk0KroXM8945nj_D9jq9qj74c6Ul7sXLCc1QdKDiuL8',
+		'Ot0Yx9ccogCk9OzirRTRjHdgLU2UKOLCQb5UNN3Imzk'
+	);
+	let payload = JSON.stringify({
+		"notifications":{
+			"title": 'hello from server',
+			"body": "thanks for subscribing"
+		}
+	});
+	Promise.resolve(webpush.sendNotification(sub, payload)).then(() =>{
+			res.status(200).json({'message': 'notification sent'});
+	})
+	.catch( err=>{
+		console.log(err);
+		res.sendStatus(500);
+	})
+	
 });
 
 io.on('connection', (socket) => {
