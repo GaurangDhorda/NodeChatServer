@@ -134,17 +134,19 @@ app.post('/subscribe', (req, res) => {
 	let sub = req.body;
 	res.set('content-type', 'application-json');
 	webpush.setVapidDetails(
-		'grdtechlab@gmail.com',
+		'mailto:grdtechlab@gmail.com',
 		'BGeXc0b2Tfiro0K5KnSdjKMOzLhTBWW9kZ14iA2i6UTUOk0KroXM8945nj_D9jq9qj74c6Ul7sXLCc1QdKDiuL8',
 		'Ot0Yx9ccogCk9OzirRTRjHdgLU2UKOLCQb5UNN3Imzk'
 	);
+
 	let payload = JSON.stringify({
 		"notifications":{
 			"title": 'hello from server',
 			"body": "thanks for subscribing"
 		}
 	});
-	Promise.resolve(webpush.sendNotification(sub, payload)).then(() =>{
+
+	Promise.all(webpush.sendNotification(sub, payload)).then(() =>{
 			res.status(200).json({'message': 'notification sent'});
 	})
 	.catch( err=>{
