@@ -132,7 +132,7 @@ app.post('/fileUpload', upload.single('image')  ,(req , res) =>{
 
 app.post('/subscribe', (req, res) => {
 	let sub = req.body;
-	res.set('content-type', 'application-json');
+//	res.set('content-type', 'application-json');
 	webpush.setVapidDetails(
 		'mailto:grdtechlab@gmail.com',
 		'BGeXc0b2Tfiro0K5KnSdjKMOzLhTBWW9kZ14iA2i6UTUOk0KroXM8945nj_D9jq9qj74c6Ul7sXLCc1QdKDiuL8',
