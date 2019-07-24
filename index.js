@@ -146,7 +146,7 @@ app.post('/subscribe', (req, res) => {
 			"body": "thanks for subscribing"
 		}
 	});
-console.log('SubData '+ sub);
+console.log('SubData '+ sub.endpoint);
 	Promise.resolve(webpush.sendNotification(sub, payload))
 	.then(() => res.status(200).send({'message': 'notification sent'}))
 	.catch( err => {
