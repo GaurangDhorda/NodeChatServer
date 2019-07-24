@@ -132,6 +132,7 @@ app.post('/fileUpload', upload.single('image')  ,(req , res) =>{
 
 app.post('/subscribe', (req, res) => {
 	let sub = req.body;
+
 //	res.set('content-type', 'application-json');
 	webpush.setVapidDetails(
 		'mailto:grdtechlab@gmail.com',
@@ -141,7 +142,7 @@ app.post('/subscribe', (req, res) => {
 
 	let payload = JSON.stringify({
 		"notifications":{
-			"title": 'hello from server',
+			"title": "hello from server",
 			"body": "thanks for subscribing"
 		}
 	});
