@@ -146,10 +146,9 @@ app.post('/subscribe', (req, res) => {
 		}
 	});
 
-	Promise.resolve(webpush.sendNotification(sub, payload)).then(() =>{
-			res.status(200).json({message: 'notification sent'});
-	})
-	.catch( err=>{
+	Promise.resolve(webpush.sendNotification(sub, payload))
+	.then(() => res.status(200).send({'message': 'notification sent'}))
+	.catch( err => {
 		console.log(err);
 		res.sendStatus(500);
 	})
