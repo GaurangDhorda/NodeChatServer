@@ -143,7 +143,7 @@ app.post('/subscribe', (req, res) => {
 	let payload = JSON.stringify({
 		notifications: {
 			title: "hello from server",
-			body: "thanks for subscribing",
+			body: "thanks for subscribing"
 		}
 	});
 console.log('SubData '+ sub.endpoint);
