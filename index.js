@@ -165,7 +165,7 @@ io.on('connection', (socket) => {
 
 	io.emit('totalUsers',totalUsers);
 	socket.on('new-message', ( data , username ) =>{
-		io.emit('new-message', {messageData: data, userName: userName});
+		io.emit('new-message', {'messageData': data, 'userName': username});
 	});
 
 	socket.on('typing', (typinguser) => {
