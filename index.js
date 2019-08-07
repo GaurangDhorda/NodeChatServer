@@ -12,21 +12,45 @@ let io = socketIO(server);
 
 let webpush = require('web-push');
 
-let multer = require('multer');
+let multer = require('multer'); // npm i --save multer
+//multer is used for handling fileUpload related operation in express server.
+// same as body-parser and cors is used for handling http routing in express server...
+// multe
 const storage = multer.diskStorage({
+	// cb : is CallBack function, where to perform multer storage tasks
 	destination: (req, file, cb) =>{
-		cb(null, 'upload');
+		//whenever new file is recieved from client side, this cb()function is fired..
+		//setting path, where incoming files to be stored..
+		cb(null, 'upload'); // upload is folder name and its root folder..
 	},
 	filename: (req,file, cb) =>{
+		// how filename should be named in upload folder is defined here..
+		// adding date with filename is our new filename to be stored in upload folder.. 
 		cb(null, Date.now() + file.originalname);
 	}
 });
 
-const upload = multer( {storage: storage});
+// for setting up filteration to save only jpeg files only, and rejects rest of files to being stored..
+const fileFilter = (req, file, cb) =>{
+	// reject file condition.
+	if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg'){
+		cb(null,true);
+	} else{
+		cb(null, false);
+	}
+}
+
+const upload = multer({
+							storage: storage,
+							fileFilter: fileFilter,
+							limits: {
+								fileSize: 1024 * 1024 * 5
+							}
+					 });
 const port = process.env.PORT || 3000;
 let totalUsers = 0;
 
-app.use(bodyParser.json());
+app.use(bodyParser.json());  // .use() loads middleware to use with existing express server.
 app.use (cors());
 
 var path = require('path');
@@ -146,8 +170,8 @@ app.post('/subscribe', (req, res) => {
 			body: "thanks for subscribing"
 		}
 	});
-console.log('SubData '+ sub.endpoint);
-	Promise.all(webpush.sendNotification(sub, payload))
+    console.log('SubData '+ sub.endpoint);
+	Promise.all([webpush.sendNotification(sub, payload)])
 	.then(() => res.status(200).send({'message': 'notification sent'}))
 	.catch( err => {
 		console.log(err);
