@@ -98,14 +98,17 @@ app.get('/', (req, res) => {
 app.get('/materialContactRead', (req, res) => {
 	// getting all data from firebase database..
 	
-	var userReference = firebase.database().ref("/Material-Contact/");
+	var userReference = firebase.database().ref("/Material-Contac/")
 	//Attach an asynchronous callback to read the data
+	
 	userReference.on("value", snapshot => {
 		const responseData = snapshotToArray(snapshot);
 	//	res.send(responseData);
 	res.json(responseData);
 		console.log(responseData);
 		 userReference.off("value");
+	}, error => {
+		res.status(500).send(error);
 	});
 });
 
