@@ -11,7 +11,7 @@ let socketIO = require('socket.io');
 let io = socketIO(server);
 
 let webpush = require('web-push');
-
+const { WebhookClient } = require('dialogflow-fulfillment');
 let multer = require('multer'); // npm i --save multer
 //multer is used for handling fileUpload related operation in express server.
 // same as body-parser and cors is used for handling http routing in express server...
@@ -55,7 +55,7 @@ app.use (cors());
 
 var path = require('path');
 
-// firebase coding... 
+// firebase coding...  npm i firebase --save
 var firebase = require('firebase');
 var config = {
 	apiKey: 'AIzaSyA8hO5x0WDnFsbdMG2iSJIxNsCywGevOfk',
@@ -72,7 +72,37 @@ firebaseAdmin.initializeApp({
 credential: firebaseAdmin.credential.cert(serviceAccount),
 databaseURL: 'https://testingapp-8fb86.firebaseio.com'
 });
+let { sessionsClient } = require('dialogflow');
 firebase.initializeApp(config);
+
+
+exports.dialogflowGateway = functions.https.onRequest((req, res) => {
+	cors(req, res, async() =>{
+		const {queryInput, sessionI} = req.body;
+		const sessionClient = new sessionsClient({credentials: serviceAccount});
+		const session =  sessionClient.sessionPath();
+		const responses = await sessionClient.detectIntent ({session, queryInput});
+		const result = responses[0].queryResult;
+		
+		res.send(result);
+	})
+})
+
+exports.dialogflowWebHook = functions.https.onRequest(async (res, req) => {
+	const agent = new WebhookClient({req, res});
+	const result = req.body.queryResult;
+	async function userOnboardingHandler(agent){
+		const db = firebaseAdmin.firestore();
+		const profile = db.collection('users').doc('jeffd23');
+		const {name, color  } = result.parameters;
+		await profile.set ({name, color});
+		agent.add('welcome abroad my friend');
+	}
+	let intentMap = new Map();
+	
+	intentMap.set ('UserOnboarding', userOnboardingHandler);
+	agent.handleRequest(intentMap);
+})
 
 // when url fire by client-side this app.get('/') default requenst fire and hello.html response fire..
 app.get('/', (req, res) => {
@@ -88,7 +118,6 @@ app.get('/', (req, res) => {
 		snapshot.forEach(function(childSnapshot) {
 			var item = childSnapshot.val();
 			item.key = childSnapshot.key;
-	
 			returnArr.push(item);
 		});
 	
@@ -159,7 +188,8 @@ app.post('/fileUpload', upload.single('image')  ,(req , res) =>{
 
 app.post('/subscribe', (req, res) => {
 	let sub = req.body;
-
+	// npm i -g web-push.
+// to generate vapid keys fire, web-push generate-vapid-keys --json
 //	res.set('content-type', 'application-json');
 	webpush.setVapidDetails(
 		'mailto:grdtechlab@gmail.com',
@@ -183,6 +213,8 @@ app.post('/subscribe', (req, res) => {
 	
 });
 
+// chatting code for serverside is here 
+// npm i socket.io-client --save (to client side, angular side)
 io.on('connection', (socket) => {
 	totalUsers++;
     	console.log('user connected');
