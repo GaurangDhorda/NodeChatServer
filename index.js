@@ -76,7 +76,7 @@ let { sessionsClient } = require('dialogflow');
 firebase.initializeApp(config);
 
 
-exports.dialogflowGateway = functions.https.onRequest((req, res) => {
+exports.dialogflowGateway = app.get ('/dialogflowGateway',((req, res) => {
 	cors(req, res, async() =>{
 		const {queryInput, sessionI} = req.body;
 		const sessionClient = new sessionsClient({credentials: serviceAccount});
@@ -86,9 +86,9 @@ exports.dialogflowGateway = functions.https.onRequest((req, res) => {
 		
 		res.send(result);
 	})
-})
+}))
 
-exports.dialogflowWebHook = functions.https.onRequest(async (res, req) => {
+exports.dialogflowWebHook = app.get ('/dialogflowWebhook', (async (res, req) => {
 	const agent = new WebhookClient({req, res});
 	const result = req.body.queryResult;
 	async function userOnboardingHandler(agent){
@@ -102,7 +102,7 @@ exports.dialogflowWebHook = functions.https.onRequest(async (res, req) => {
 	
 	intentMap.set ('UserOnboarding', userOnboardingHandler);
 	agent.handleRequest(intentMap);
-})
+}));
 
 // when url fire by client-side this app.get('/') default requenst fire and hello.html response fire..
 app.get('/', (req, res) => {
