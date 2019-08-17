@@ -12,6 +12,7 @@ let io = socketIO(server);
 
 let webpush = require('web-push');
 const { WebhookClient } = require('dialogflow-fulfillment');
+const {SessionsClient} = require('dialogflow');
 let multer = require('multer'); // npm i --save multer
 //multer is used for handling fileUpload related operation in express server.
 // same as body-parser and cors is used for handling http routing in express server...
@@ -74,21 +75,24 @@ databaseURL: 'https://testingapp-8fb86.firebaseio.com'
 });
 let { sessionsClient } = require('dialogflow');
 firebase.initializeApp(config);
-
-
-exports.dialogflowGateway = app.get ('/dialogflowGateway',((req, res) => {
-	cors(req, res, async() =>{
-		const {queryInput, sessionI} = req.body;
-		const sessionClient = new sessionsClient({credentials: serviceAccount});
-		const session =  sessionClient.sessionPath();
+const dServiceAccount = require('./service-account.json');
+app.post ('/dialogflowGateway',( async(req, res) => {
+	try{
+		const {queryInput, sessionId} = req.body;
+		console.log(queryInput + sessionId);
+		const sessionClient = new SessionsClient({credentials: dServiceAccount});
+		const session =  sessionClient.sessionPath('user-alkhbg' , sessionId);
 		const responses = await sessionClient.detectIntent ({session, queryInput});
 		const result = responses[0].queryResult;
 		
 		res.send(result);
-	})
-}))
+	}
+	catch(err){
+		console.log(err);
+	}
+}));
 
-exports.dialogflowWebHook = app.get ('/dialogflowWebhook', (async (res, req) => {
+app.post ('/dialogflowWebhook', (async (req, res) => {
 	const agent = new WebhookClient({req, res});
 	const result = req.body.queryResult;
 	async function userOnboardingHandler(agent){
