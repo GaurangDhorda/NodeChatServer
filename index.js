@@ -94,7 +94,7 @@ app.post ('/dialogflowGateway',( async(req, res) => {
 
 app.post ('/dialogflowWebhook', (async (req, res) => {
 	const agent = new WebhookClient({req, res});
-	const result = req.body.queryResult;
+	const result = req.body;
 	async function userOnboardingHandler(agent){
 		const db = firebaseAdmin.firestore();
 		const profile = db.collection('users').doc('jeffd23');
