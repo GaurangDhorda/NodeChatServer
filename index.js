@@ -73,7 +73,7 @@ var serviceAccount = require( './serviceAccountKey.json');
 const dServiceAccount = require('./service-account.json');
 
 firebaseAdmin.initializeApp({
-		credential: firebaseAdmin.credential.cert(dserviceAccount),
+		credential: firebaseAdmin.credential.cert(dServiceAccount),
 		databaseURL: 'https://user-alkhbg.firebaseio.com'
 });
 
