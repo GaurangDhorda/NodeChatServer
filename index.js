@@ -67,15 +67,19 @@ var config = {
 	messagingSenderId: '345026705484',
 	appId: '1:345026705484:web:962e5b869e82de52'
 };
+
 let firebaseAdmin = require('firebase-admin');
 var serviceAccount = require( './serviceAccountKey.json');
+const dServiceAccount = require('./service-account.json');
+
 firebaseAdmin.initializeApp({
-credential: firebaseAdmin.credential.cert(serviceAccount),
-databaseURL: 'https://testingapp-8fb86.firebaseio.com'
+		credential: firebaseAdmin.credential.cert(dserviceAccount),
+		databaseURL: 'https://user-alkhbg.firebaseio.com'
 });
+
 let { sessionsClient } = require('dialogflow');
 firebase.initializeApp(config);
-const dServiceAccount = require('./service-account.json');
+
 app.post ('/dialogflowGateway',( async(req, res) => {
 	try{
 		const {queryInput, sessionId} = req.body;
@@ -93,7 +97,10 @@ app.post ('/dialogflowGateway',( async(req, res) => {
 }));
 
 app.post ('/dialogflowWebhook', (async (req, res) => {
-	const agent = new WebhookClient({request: req, response: res});
+	const agent = new WebhookClient({
+										request: req, 
+										response: res
+									});
 	const result = req.body.queryResult;
 	async function userOnboardingHandler(agent){
 		const db = firebaseAdmin.firestore();
@@ -102,9 +109,9 @@ app.post ('/dialogflowWebhook', (async (req, res) => {
 		await profile.set ({name, color});
 		agent.add('welcome abroad my friend');
 	}
-	let intentMap = new Map();
+	// let intentMap = new Map();
 	
-	intentMap.set ('UserOnboarding', userOnboardingHandler);
+	// intentMap.set ('UserOnboarding', userOnboardingHandler);
 	agent.handleRequest(userOnboardingHandler);
 }));
 
