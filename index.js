@@ -85,7 +85,7 @@ app.post ('/dialogflowGateway',( async(req, res) => {
 		const {queryInput, sessionId} = req.body;
 		console.log(queryInput + sessionId);
 		const sessionClient = new SessionsClient({credentials: dServiceAccount});
-		const session =  sessionClient.sessionPath('restaurant-search-agent-keqvwh' , sessionId);
+		const session =  sessionClient.sessionPath('user-alkhbg' , sessionId);
 		const responses = await sessionClient.detectIntent ({session, queryInput});
 		const result = responses[0].queryResult;
 		res.send(result);
