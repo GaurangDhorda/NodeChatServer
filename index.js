@@ -107,7 +107,7 @@ app.post ('/dialogflowWebhook', (async (req, res) => {
 		const profile = db.collection('users').doc('jeffd23');
 		const {name, color  } = result.parameters;
 		await profile.set ({name, color});
-		agent.add('welcome abroad my friend');
+		agent.add('Congratulations!, You are correctly Authenticated.');
 	}
 	// let intentMap = new Map();
 	
